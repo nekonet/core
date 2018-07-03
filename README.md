@@ -14,3 +14,10 @@ Install requirements:
 ```
 pip install -r requirements.txt
 ```
+
+
+# RUN
+
+```
+FLASK_APP=src/app.py flask run
+```
