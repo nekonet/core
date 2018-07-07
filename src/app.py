@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 
-from datetime import datetime 
+from datetime import datetime
 from datetime import timedelta
 
 from Crypto.PublicKey import RSA
@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 def get_nodes():
     '''Used to retreive the node list stored in a .csv file.
-        
+
         Returns: nodes (a list of nodes, each one contains a dict with
         info about the node).
     '''
@@ -47,3 +47,8 @@ def build_token():
 def get_token():
     token = build_token()
     return token.get('token')
+
+@app.route("/get_nodes", methods={'GET'})
+def get_nodes_list():
+    nodes = get_nodes()
+    return jsonify(nodes)
