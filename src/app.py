@@ -18,7 +18,7 @@ def get_nodes():
         info about the node).
     '''
 
-    df=pd.read_csv('./nodes/nodelist.csv')
+    df=pd.read_csv('./data/nodelist.csv')
     nodes = []
     for row in range(0,df.shape[0]): # get number of rows
         nodes.append(dict(ip=df.at[row,'ip'],
