@@ -1,6 +1,6 @@
 import pandas as pd
 
-def get_nodes():
+def get_network_nodes():
     '''Used to retreive the node list stored in a .csv file.
 
         Returns: nodes (a list of nodes, each one contains a dict with

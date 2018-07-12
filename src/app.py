@@ -1,5 +1,5 @@
 from flask import Flask, abort, jsonify, request
-from services.nodes import get_nodes
+from services.nodes import get_network_nodes 
 from services.tokens import build_token, check_transaction
 from services.keys import  get_server_keys
 import json
@@ -21,7 +21,7 @@ init_app(app)
 # Returns the list of nodes on the network
 @app.route("/nodes", methods=['GET'])
 def get_nodes():
-    nodes = get_nodes()
+    nodes = get_network_nodes()
     return jsonify(nodes)
 
 # Returns the key the nodes will use to validate access tokens
