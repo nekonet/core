@@ -1,20 +1,19 @@
 from flask import Flask, abort, jsonify, request
 from services.nodes import get_nodes
 from services.tokens import build_token, check_transaction
-
+from services.keys import  get_server_keys
 import json
 import base64
 
 app = Flask(__name__)
 
 def init_app(app):
-   with open('public.pem','r') as f_pub:
-    with open('private.pem', 'r') as f_priv:
-        app.config.update(dict(
-                PUBLIC_KEY=f_priv.read(),
-                PRIVATE_KEY=f_pub.read(),
-                PRICE=1000,
-            ))
+    pub_key, priv_key = get_server_keys()
+    app.config.update(dict(
+            PUBLIC_KEY=pub_key,
+            PRIVATE_KEY=priv_key,
+            PRICE=1000,
+        ))
 
 
 init_app(app)
