@@ -30,11 +30,6 @@ def get_nodes():
 def get_token_validation_key():
     return app.config['PUBLIC_KEY']
 
-# Endpoint for buying new access tokens
-@app.route("/token", methods=['POST'])
-def post_token():
-    return "New token"
-
 # Returns access token for a given transaction (if this transaction has been validated)
 @app.route("/token", methods=['GET'])
 def get_token():
@@ -44,8 +39,8 @@ def get_token():
         if tx_id:
             is_transaction_valid, tx_amount = check_transaction(tx_id)
             if is_transaction_valid:
-                token = build_token(tx_amount)
-                return jsonify({'token': token})
+                response = build_token(tx_amount, tx_id)
+                return jsonify(response)
             else:
                 abort(401)
         else:
