@@ -1,6 +1,6 @@
 from flask import Flask, abort, jsonify, request
 from services.nodes import get_nodes
-from services.tokens import build_token, check_transaction, get_public_key
+from services.tokens import build_token, check_transaction
 
 import json
 import base64
@@ -13,6 +13,7 @@ def init_app(app):
         app.config.update(dict(
                 PUBLIC_KEY=f_priv.read(),
                 PRIVATE_KEY=f_pub.read(),
+                PRICE=1000,
             ))
 
 
@@ -44,7 +45,7 @@ def get_token():
             is_transaction_valid, tx_amount = check_transaction(tx_id)
             if is_transaction_valid:
                 token = build_token(tx_amount)
-                return token.get('token')
+                return jsonify({'token': token})
             else:
                 abort(401)
         else:
