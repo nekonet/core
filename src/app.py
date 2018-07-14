@@ -44,24 +44,28 @@ def get_token_validation_key():
 
 @app.route("/check_transaction_status", methods=['POST'])
 def check_transaction_status():
-    tx_id = request.get_json()['tx_id']
-    status = check_transaction(tx_id)
-    return jsonify(status)
+    tx_id = request.get_json().get('tx_id')
+    tx_status, tx_amount = check_transaction(tx_id)
+    return jsonify({'tx_status': tx_status, 'tx_amount': tx_amount})
 
 # Returns access token for a given transaction (if this transaction has been validated)
-@app.route("/token", methods=['GET'])
+@app.route("/token", methods=['POST'])
 def get_token():
-    tx_id = None
-    if 'TX_ID' in request.headers:
-        tx_id = request.headers.get('TX_ID')
-        if tx_id:
-            is_transaction_valid, tx_amount = check_transaction(tx_id)
-            if is_transaction_valid:
-                response = build_token(tx_amount, tx_id)
-                return jsonify(response)
-            else:
-                abort(401)
+    tx_id = request.get_json().get('tx_id')
+    if tx_id:
+        tx_status, tx_amount = check_transaction(tx_id)
+        if tx_status == 'CONFIRMED':
+            response = build_token(tx_status, tx_amount, tx_id)
+            return jsonify(response)
+        elif tx_status == 'UNCONFIRMED':
+            return jsonify({
+                'tx_status': tx_status,
+                'tx_amount': None,
+                'token': None,
+                'price': app.config['PRICE'],
+                'expires_at': None,
+            })
         else:
             abort(400)
     else:
-        abort(401)
+        abort(400)

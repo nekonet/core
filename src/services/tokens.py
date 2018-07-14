@@ -18,13 +18,15 @@ def generate_token(minutes):
     return encrypted_token.decode('utf-8'), expiration_date
 
 # Calculate time of access, build and encrypt token based on the price per unit of time
-def build_token(tx_amount, tx_id):
+def build_token(tx_status, tx_amount, tx_id):
     minutes_bought = float(tx_amount) / app.config['PRICE']
     token, expiration = generate_token(minutes_bought)
     data = {
         'token': token,
         'price': app.config['PRICE'],
         'expires_at': expiration,
-        'tx_id': tx_id
+        'tx_id': tx_id,
+        'tx_status': tx_status,
+        'tx_amount': tx_amount
     }
     return data

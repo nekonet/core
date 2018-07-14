@@ -57,7 +57,7 @@ def check_transaction(tx_id):
             if transaction['transactionHash'] == tx_id:
                 for transfer in transaction['transfers']:
                     if transfer['address'] == app.config['SERVER_WALLET_ADDRESS']:
-                        return 'CONFIRMED', transfer['amount']
+                        return 'CONFIRMED', transfer['amount'] / 1.0e10
 
     unconfirmed_tx_response = wallet_request("getUnconfirmedTransactionHashes", {})
     unconfirmed_tx = unconfirmed_tx_response['result']['transactionHashes']
