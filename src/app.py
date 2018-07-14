@@ -1,8 +1,8 @@
 from flask import Flask, abort, jsonify, request
 from services.nodes import get_network_nodes 
-from services.tokens import build_token, check_transaction
+from services.tokens import build_token
 from services.keys import  get_server_keys
-from services.wallet import network_status, server_wallet
+from services.wallet import network_status, server_wallet, check_transaction
 import json
 import base64
 
@@ -13,6 +13,7 @@ def init_app(app):
     app.config.update(dict(
             PUBLIC_KEY=pub_key,
             PRIVATE_KEY=priv_key,
+            SERVER_WALLET_ADDRESS="NuzAdd2cAPUJgugdknCeGADjCV4hZgaXdh2sKaPARjC9hk16XyQ6JYaDM4wdMnr2osDswGLSebCW2R1EzSbzUJ5Q1nhJmUdBE",
             PRICE=1000,
         ))
 
@@ -40,6 +41,12 @@ def get_nodes():
 @app.route("/token_validation_key", methods=['GET'])
 def get_token_validation_key():
     return app.config['PUBLIC_KEY']
+
+@app.route("/check_transaction_status", methods=['POST'])
+def check_transaction_status():
+    tx_id = request.get_json()['tx_id']
+    status = check_transaction(tx_id)
+    return jsonify(status)
 
 # Returns access token for a given transaction (if this transaction has been validated)
 @app.route("/token", methods=['GET'])

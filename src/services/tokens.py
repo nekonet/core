@@ -28,10 +28,3 @@ def build_token(tx_amount, tx_id):
         'tx_id': tx_id
     }
     return data
-
-# TODO: Connect to the wallet daemon and check if transaction is there
-def check_transaction(tx_id):
-    if tx_id:
-        return True, 60000
-    else:
-        return False, None
