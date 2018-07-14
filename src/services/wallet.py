@@ -25,3 +25,15 @@ def network_status():
         'peerCount': response['result']['peerCount']
     }
 
+
+def server_wallet():
+    response = wallet_request("getAddresses", {})
+    addresses = response['result']['addresses']
+    address = ""
+
+    if len(addresses) == 1:
+        address = addresses[0]
+
+    return {
+        'address': address 
+    }

@@ -2,7 +2,7 @@ from flask import Flask, abort, jsonify, request
 from services.nodes import get_network_nodes 
 from services.tokens import build_token, check_transaction
 from services.keys import  get_server_keys
-from services.wallet import network_status
+from services.wallet import network_status, server_wallet
 import json
 import base64
 
@@ -24,6 +24,11 @@ init_app(app)
 def get_network_status():
     status = network_status()
     return jsonify(status)
+
+@app.route("/wallet_address", methods=['GET'])
+def get_wallet_address():
+    address = server_wallet()
+    return jsonify(address)
 
 # Returns the list of nodes on the network
 @app.route("/nodes", methods=['GET'])
