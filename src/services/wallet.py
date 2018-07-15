@@ -1,5 +1,4 @@
 from flask import current_app as app
-from datetime import datetime, timedelta
 import requests
 
 def wallet_request(method, params):
@@ -41,10 +40,6 @@ def server_wallet():
         'address': address 
     }
 
-def isTxTimestampValid(tx_timestamp):
-    time = datetime.fromtimestamp(int(tx_timestamp))
-    return time > datetime.now()-timedelta(days=30)
-
 def check_transaction(tx_id):
     status_response = wallet_request("getStatus", {})
     last_block = status_response['result']['blockCount']
@@ -61,19 +56,16 @@ def check_transaction(tx_id):
             if transaction['transactionHash'] == tx_id:
                 for transfer in transaction['transfers']:
                     if transfer['address'] == app.config['SERVER_WALLET_ADDRESS']:
-                        if isTxTimestampValid(transaction['timestamp']):
-                            return 'CONFIRMED', transfer['amount'] / 1.0e10
-                        else:
-                            return 'NOT_FOUND', None
+                        return 'CONFIRMED', transfer['amount'] / 1.0e10, transaction['timestamp']
 
     unconfirmed_tx_response = wallet_request("getUnconfirmedTransactionHashes", {})
     unconfirmed_tx = unconfirmed_tx_response['result']['transactionHashes']
 
     for transaction in unconfirmed_tx:
         if transaction == tx_id:
-            return 'UNCONFIRMED', None
+            return 'UNCONFIRMED', None, None
 
-    return 'NOT_FOUND', None
+    return 'NOT_FOUND', None, None
 
 def create_wallet():
     create_address_response = wallet_request("createAddress", {})

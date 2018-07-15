@@ -58,14 +58,15 @@ def check_transaction_status():
 def get_token():
     tx_id = request.get_json().get('tx_id')
     if tx_id:
-        tx_status, tx_amount = check_transaction(tx_id)
+        tx_status, tx_amount, tx_timestamp = check_transaction(tx_id)
         if tx_status == 'CONFIRMED':
-            response = build_token(tx_status, tx_amount, tx_id)
+            response = build_token(tx_status, tx_amount, tx_timestamp, tx_id)
             return jsonify(response)
         elif tx_status == 'UNCONFIRMED':
             return jsonify({
                 'tx_status': tx_status,
                 'tx_amount': None,
+                'tx_timestamp': None,
                 'token': None,
                 'price': app.config['PRICE'],
                 'expires_at': None,
