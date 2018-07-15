@@ -1,16 +1,25 @@
-import pandas as pd
+from flask import json, jsonify
+from services.wallet import create_wallet
+import uuid
+
+nodes_fpath = './data/nodes.json'
 
 def get_network_nodes():
-    '''Used to retreive the node list stored in a .csv file.
+    data = json.load(open(nodes_fpath))
+    return data
 
-        Returns: nodes (a list of nodes, each one contains a dict with
-        info about the node).
-    '''
 
-    df=pd.read_csv('./data/nodelist.csv')
-    nodes = []
-    for row in range(0,df.shape[0]): # get number of rows
-        nodes.append(dict(ip=df.at[row,'ip'],
-            wallet=df.at[row,'wallet']))
-    return nodes
+def add_network_node(ip):
+    data = json.load(open(nodes_fpath))
+    identifier = str(uuid.uuid4())
+    wallet_address = create_wallet()
+    new_node_entry = {"id": identifier, "wallet_address": wallet_address, "ip": ip}
+    data["nodes"][identifier] = new_node_entry
+    new_data = json.dumps(data)
+    with open(nodes_fpath, 'w') as outfile:
+        outfile.write(new_data)
+    
+    return new_node_entry
+
+
 

@@ -1,5 +1,5 @@
 from flask import Flask, abort, jsonify, request
-from services.nodes import get_network_nodes 
+from services.nodes import get_network_nodes, add_network_node
 from services.tokens import build_token
 from services.keys import  get_server_keys
 from services.wallet import network_status, server_wallet, check_transaction
@@ -36,6 +36,11 @@ def get_wallet_address():
 def get_nodes():
     nodes = get_network_nodes()
     return jsonify(nodes)
+
+@app.route("/node", methods=['POST'])
+def create_node():
+    response = add_network_node(request.remote_addr)
+    return jsonify(response)
 
 # Returns the key the nodes will use to validate access tokens
 @app.route("/token_validation_key", methods=['GET'])

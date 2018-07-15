@@ -40,7 +40,6 @@ def server_wallet():
         'address': address 
     }
 
-# TODO: Connect to the wallet daemon and check if transaction is there
 def check_transaction(tx_id):
     status_response = wallet_request("getStatus", {})
     last_block = status_response['result']['blockCount']
@@ -67,3 +66,8 @@ def check_transaction(tx_id):
             return 'UNCONFIRMED', None
 
     return 'NOT_FOUND', None
+
+def create_wallet():
+    create_address_response = wallet_request("createAddress", {})
+    new_address = create_address_response['result']['address']
+    return new_address
