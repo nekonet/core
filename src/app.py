@@ -1,7 +1,7 @@
 from flask import Flask, abort, jsonify, request
 from services.nodes import get_network_nodes, add_network_node
 from services.tokens import build_token
-from services.keys import  get_server_keys
+from services.keys import  get_server_keys, get_server_wallet
 from services.wallet import network_status, server_wallet, check_transaction
 import json
 import base64
@@ -10,10 +10,11 @@ app = Flask(__name__)
 
 def init_app(app):
     pub_key, priv_key = get_server_keys()
+    server_wallet_address = get_server_wallet()
     app.config.update(dict(
             PUBLIC_KEY=pub_key,
             PRIVATE_KEY=priv_key,
-            SERVER_WALLET_ADDRESS="NuzAdd2cAPUJgugdknCeGADjCV4hZgaXdh2sKaPARjC9hk16XyQ6JYaDM4wdMnr2osDswGLSebCW2R1EzSbzUJ5Q1nhJmUdBE",
+            SERVER_WALLET_ADDRESS=server_wallet_address,
             PRICE=1000,
         ))
 

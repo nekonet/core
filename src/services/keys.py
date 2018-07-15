@@ -1,6 +1,17 @@
 from Crypto.PublicKey import RSA
 import os.path
 
+def get_server_wallet():
+    server_wallet_fpath = './data/server_address.dat'
+    hasWallet = os.path.isfile(server_wallet_fpath)
+    if hasWallet:
+        f = open(server_wallet_fpath)
+        return f.read()
+    else:
+        print("Error: Server wallet not found")
+        return ""
+    
+
 def get_server_keys():
     pub_fname = './data/core_public_key.pem'
     priv_fname = './data/core_private_key.pem'
