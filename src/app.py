@@ -67,7 +67,6 @@ def get_token():
     tx_id = request.get_json().get('tx_id')
     if tx_id:
         tx_status, tx_amount, tx_timestamp = check_transaction(tx_id)
-        print('RES: ', tx_status, tx_amount, tx_timestamp)
         if tx_status == 'CONFIRMED':
             response = build_token(tx_status, tx_amount, tx_timestamp, tx_id)
             return jsonify(response)
@@ -84,3 +83,6 @@ def get_token():
             abort(400)
     else:
         abort(400)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
