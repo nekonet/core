@@ -53,7 +53,9 @@ def create_node():
 # Returns the key the nodes will use to validate access tokens
 @app.route("/token_validation_key", methods=['GET'])
 def get_token_validation_key():
-    return app.config['PUBLIC_KEY']
+    return jsonify({
+        'public_key': app.config['PUBLIC_KEY']
+    })
 
 @app.route("/check_transaction_status", methods=['POST'])
 def check_transaction_status():
