@@ -6,7 +6,7 @@ def get_server_wallet():
     hasWallet = os.path.isfile(server_wallet_fpath)
     if hasWallet:
         f = open(server_wallet_fpath)
-        return f.read()
+        return f.read().strip()
     else:
         print("Error: Server wallet not found")
         return ""

@@ -2,7 +2,7 @@ from flask import Flask, abort, jsonify, request
 from services.nodes import get_network_nodes, add_network_node
 from services.tokens import build_token
 from services.keys import  get_server_keys, get_server_wallet
-from services.wallet import network_status, server_wallet, check_transaction
+from services.wallet import blockchain_status, check_transaction
 import json
 import base64
 
@@ -15,22 +15,29 @@ def init_app(app):
             PUBLIC_KEY=pub_key,
             PRIVATE_KEY=priv_key,
             SERVER_WALLET_ADDRESS=server_wallet_address,
-            PRICE=1000,
+            PRICE=100,
         ))
 
 
 init_app(app)
 
-# Returns the network status
+# Returns the blockchain status
+@app.route("/blockchain_status", methods=['GET'])
+def get_blockchain_status():
+    status = blockchain_status()
+    return jsonify(status)
+
 @app.route("/network_status", methods=['GET'])
 def get_network_status():
-    status = network_status()
-    return jsonify(status)
+    nodes = get_network_nodes()
+    return jsonify({
+        "server_wallet": app.config['SERVER_WALLET_ADDRESS'],
+        "nodes": nodes['nodes']
+    })
 
 @app.route("/wallet_address", methods=['GET'])
 def get_wallet_address():
-    address = server_wallet()
-    return jsonify(address)
+    return jsonify({"address": app.config['SERVER_WALLET_ADDRESS'] })
 
 # Returns the list of nodes on the network
 @app.route("/nodes", methods=['GET'])
@@ -60,6 +67,7 @@ def get_token():
     tx_id = request.get_json().get('tx_id')
     if tx_id:
         tx_status, tx_amount, tx_timestamp = check_transaction(tx_id)
+        print('RES: ', tx_status, tx_amount, tx_timestamp)
         if tx_status == 'CONFIRMED':
             response = build_token(tx_status, tx_amount, tx_timestamp, tx_id)
             return jsonify(response)

@@ -19,25 +19,12 @@ def wallet_request(method, params):
 
     return r.json()
 
-def network_status():
+def blockchain_status():
     response = wallet_request("getStatus", {})
     return {
         'blockCount': response['result']['blockCount'],
         'lastBlockHash': response['result']['lastBlockHash'],
         'peerCount': response['result']['peerCount']
-    }
-
-
-def server_wallet():
-    response = wallet_request("getAddresses", {})
-    addresses = response['result']['addresses']
-    address = ""
-
-    if len(addresses) == 1:
-        address = addresses[0]
-
-    return {
-        'address': address 
     }
 
 def check_transaction(tx_id):
