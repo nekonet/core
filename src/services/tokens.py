@@ -12,7 +12,7 @@ def get_expiration_timestamp(minutes, tx_timestamp):
 def generate_token(minutes, tx_timestamp):
     pub_key = RSA.importKey(app.config['PRIVATE_KEY'])
     priv_key = RSA.importKey(app.config['PUBLIC_KEY']) 
-    expiration_date = get_expiration_timestamp(minutes, tx_timestamp)
+    expiration_date = int(get_expiration_timestamp(minutes, tx_timestamp))
     rsa_result = pub_key.encrypt(str(expiration_date).encode('utf-8'), 32)
     encrypted_token = base64.b64encode(rsa_result[0])
     return encrypted_token.decode('utf-8'), expiration_date
